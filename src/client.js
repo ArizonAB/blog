@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import './tailwind.scss';
 import App from './App';
 import {recordSource, createEnvironment} from './Environment';
 import PreloadCache from './preloadQueryCache';

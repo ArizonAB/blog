@@ -1,10 +1,15 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@font-face {
+  font-family: 'Hurme Geometric Sans';
+  src: url('./assets/fonts/HurmeGeometricSans2-SemiBold.eot');
+  src: url('./assets/fonts/HurmeGeometricSans2-SemiBold.eot?#iefix')
+      format('embedded-opentype'),
+    url('./assets/fonts/HurmeGeometricSans2-SemiBold.woff2') format('woff2'),
+    url('./assets/fonts/HurmeGeometricSans2-SemiBold.woff') format('woff'),
+    url('./assets/fonts/HurmeGeometricSans2-SemiBold.ttf') format('truetype'),
+    url('./assets/fonts/HurmeGeometricSans2-SemiBold.svg#HurmeGeometricSans3-SemiBold')
+      format('svg');
+  font-weight: 600;
+  font-style: normal;
 }
 
 code {

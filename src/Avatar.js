@@ -11,7 +11,6 @@ import {Logout} from 'grommet-icons/icons/Logout';
 import {Add} from 'grommet-icons/icons/Add';
 import {MoreVertical} from 'grommet-icons/icons/MoreVertical';
 import {Github} from 'grommet-icons/icons/Github';
-import GitHubLoginButton from './GitHubLoginButton';
 import {newIssueUrl} from './issueUrls';
 import {createFragmentContainer, type RelayProp} from 'react-relay';
 import {useFragment} from 'react-relay/hooks';

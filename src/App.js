@@ -86,36 +86,28 @@ export const theme = deepMerge(generate(24, 10), {
 
 function Header({gitHub, adminLinks}) {
   return (
-    <>
-      <Box margin="medium" style={{position: 'absolute', top: 0, right: 0}}>
-        <Avatar gitHub={gitHub} adminLinks={adminLinks} />
-      </Box>
-      <PostBox>
-        <Box
-          pad={{horizontal: 'medium'}}
-          border={{
-            size: 'xsmall',
-            side: 'bottom',
-            color: 'rgba(0,0,0,0.1)',
-          }}>
-          <Heading style={{marginTop: 0}} level={1}>
-            <Link
-              getProps={({isCurrent}) => ({
-                style: isCurrent
-                  ? {
-                      textDecoration: 'none',
-                      color: 'inherit',
-                      cursor: 'auto',
-                    }
-                  : {color: 'inherit'},
-              })}
-              to="/">
-              {config.title || 'OneBlog'}
-            </Link>
-          </Heading>
-        </Box>
-      </PostBox>
-    </>
+    <div className="mt-8 md:mt-10 mb-4 md:mb-16 text-center flex justify-between px-6">
+      <Link
+        getProps={({isCurrent}) => ({
+          style: isCurrent
+            ? {
+                textDecoration: 'none',
+                color: 'inherit',
+                cursor: 'auto',
+              }
+            : {
+                color: 'inherit',
+                textDecoration: 'none',
+              },
+        })}
+        to="/">
+        <img
+          src={require('./assets/logo.svg')}
+          alt="Arizon AB"
+          className="h-10"
+        />
+      </Link>
+    </div>
   );
 }
 
@@ -199,9 +191,20 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
       <>
         <Header gitHub={data.gitHub} adminLinks={[]} />
         <Posts repository={respository} />
+        <Footer />
       </>
     );
   }
+}
+
+function Footer() {
+  return (
+    <div className="mt-10 mb-10 md:mt-48 md:mb-56 flex justify-center p-4">
+      <div className="text-center">
+        <img className="w-16" src={require('./assets/logo-symbol-black.svg')} />
+      </div>
+    </div>
+  );
 }
 
 export const postRootQuery = graphql`
@@ -236,7 +239,6 @@ export const postRootQuery = graphql`
           id
           number
           ...Post_post
-          ...Comments_post
         }
       }
     }
@@ -276,7 +278,7 @@ function PostRoot({preloadedQuery}: {preloadedQuery: any}) {
           ]}
         />
         <Post context="details" post={post} />
-        <Comments post={post} postId={post.id} viewer={data?.gitHub?.viewer} />
+        <Footer />
       </>
     );
   }
@@ -291,20 +293,18 @@ const Route = React.memo(function Route({
   const notificationContext = React.useContext(NotificationContext);
   const {loginStatus} = React.useContext(UserContext);
   return (
-    <div style={{position: 'relative'}}>
-      <div className="layout">
-        <ErrorBoundary>
-          <React.Suspense fallback={null}>
-            <routeConfig.component
-              key={loginStatus === 'logged-in' ? 'logged-in' : 'logged-out'}
-              preloadedQuery={routeConfig.preload(cache, environment, {
-                ...props,
-                notificationContext,
-              })}
-            />
-          </React.Suspense>
-        </ErrorBoundary>
-      </div>
+    <div className="relative w-full max-w-2xl m-auto break-words">
+      <ErrorBoundary>
+        <React.Suspense fallback={null}>
+          <routeConfig.component
+            key={loginStatus === 'logged-in' ? 'logged-in' : 'logged-out'}
+            preloadedQuery={routeConfig.preload(cache, environment, {
+              ...props,
+              notificationContext,
+            })}
+          />
+        </React.Suspense>
+      </ErrorBoundary>
     </div>
   );
 });

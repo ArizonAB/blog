@@ -12,6 +12,22 @@
   font-style: normal;
 }
 
+body {
+  font-family: 'Open Sans', sans-serif;
+  background-color: #fff;
+  color: #1a202c;
+}
+
+h1,
+h2,
+h3,
+h4,
+h6 {
+  font-family: 'Hurme Gemoetric Sans', sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

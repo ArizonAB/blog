@@ -40,7 +40,9 @@ class CodeBlock extends React.PureComponent<
       ? null
       : Promise.all([
           import('react-syntax-highlighter/dist/esm/light'),
-          import('react-syntax-highlighter/dist/esm/styles/hljs/github'),
+          import(
+            'react-syntax-highlighter/dist/esm/styles/hljs/shades-of-purple'
+          ),
           importLanguage(this.props.language),
         ])
           .then(
@@ -57,7 +59,11 @@ class CodeBlock extends React.PureComponent<
               }
               this.setState({
                 SyntaxHighlighter: props => (
-                  <SyntaxHighlighter style={style} {...props} />
+                  <SyntaxHighlighter
+                    style={style}
+                    className="md:rounded-lg shadow-lg"
+                    {...props}
+                  />
                 ),
               });
             },
@@ -75,14 +81,7 @@ class CodeBlock extends React.PureComponent<
       return <SyntaxHighlighter language={language}>{value}</SyntaxHighlighter>;
     }
     return (
-      <pre
-        style={{
-          display: 'block',
-          overflowX: 'auto',
-          padding: '0.5em',
-          color: 'rgb(51, 51, 51)',
-          background: 'rgb(248, 248, 248)',
-        }}>
+      <pre className="block overflow-x-auto p-0 rounded-sm">
         <code className={`language-${language}`}>{value}</code>
       </pre>
     );
@@ -123,7 +122,7 @@ function Image(props) {
 }
 
 function P(props) {
-  return <Paragraph fill={true} {...props} />;
+  return <p className="mb-4" {...props} />;
 }
 
 const parseHtml = htmlParser({
@@ -182,7 +181,7 @@ const defaultRenderers = ({SyntaxHighlighter}) => ({
   },
   text(props) {
     const text = props.children;
-    return emojify(text);
+    return <div className="leading-loose px-6">{emojify(text)}</div>;
   },
   code(props) {
     return <CodeBlock SyntaxHighlighter={SyntaxHighlighter} {...props} />;
@@ -229,7 +228,19 @@ const defaultRenderers = ({SyntaxHighlighter}) => ({
     return <P {...props} />;
   },
   heading(props) {
-    return <Heading {...props} level={props.level + 1} />;
+    const common = 'font-display';
+    switch (props.level + 1) {
+      case 1:
+        return <h1 className={`${common} text-6xl`} {...props}></h1>;
+      case 2:
+        return <h2 className={`${common} text-4xl`} {...props}></h2>;
+      case 3:
+        return <h3 className={`${common} text-3xl`} {...props}></h3>;
+      case 4:
+        return <h4 className={`${common} text-2xl`} {...props}></h4>;
+      default:
+        return <h5 className={`${common} text-xl`} {...props}></h5>;
+    }
   },
   link: Link,
   linkReference(props) {
@@ -633,6 +644,7 @@ function importLanguage(
     case 'r':
       return import('react-syntax-highlighter/dist/esm/languages/hljs/r');
     case 'reasonml':
+    case 'reason':
       return import(
         'react-syntax-highlighter/dist/esm/languages/hljs/reasonml'
       );

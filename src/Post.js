@@ -30,6 +30,9 @@ import parse from 'remark-parse';
 import imageUrl from './imageUrl';
 import {Helmet} from 'react-helmet';
 import PreloadCacheContext from './PreloadCacheContext';
+import * as throttle from 'lodash.throttle';
+import * as debounce from 'lodash.debounce';
+import {Progress} from './Progress';
 
 import type {Post_post} from './__generated__/Post_post.graphql';
 
@@ -438,6 +441,16 @@ export function computePostDate(post: {
   return new Date(post.createdAt);
 }
 
+function extractTwitterHandle(url: string): ?string {
+  if (
+    url.indexOf('https://twitter.com') === 0 ||
+    url.indexOf('https://www.twitter.com') === 0
+  ) {
+    const handle = url.split('/').pop();
+    return handle;
+  }
+}
+
 export const Post = ({relay, post, context}: Props) => {
   const environment = useRelayEnvironment();
   const cache = React.useContext(PreloadCacheContext);
@@ -453,14 +466,52 @@ export const Post = ({relay, post, context}: Props) => {
   const {loginStatus, login} = React.useContext(UserContext);
   const isLoggedIn = loginStatus === 'logged-in';
 
-  const usedReactions = (post.reactionGroups || []).filter(
-    g => g.users.totalCount > 0,
-  );
+  const contentSectionRef = React.useRef<?HTMLElement>(null);
+
+  const [hasCalculated, setHasCalculated] = React.useState<boolean>(false);
+  const [contentHeight, setContentHeight] = React.useState<number>(0);
+
+  React.useEffect(() => {
+    const calculateBodySize = throttle(() => {
+      const contentSection = contentSectionRef.current;
+
+      if (!contentSection) return;
+
+      /**
+       * If we haven't checked the content's height before,
+       * we want to add listeners to the content area's
+       * imagery to recheck when it's loaded
+       */
+      if (!hasCalculated) {
+        const debouncedCalculation = debounce(calculateBodySize);
+        const $imgs = contentSection.querySelectorAll('img');
+
+        $imgs.forEach($img => {
+          // If the image hasn't finished loading then add a listener
+          if ($img instanceof HTMLImageElement && !$img.complete) {
+            $img.onload = debouncedCalculation;
+          }
+        });
+
+        // Prevent rerun of the listener attachment
+        setHasCalculated(true);
+      }
+
+      // Set the height and offset of the content area
+      setContentHeight(contentSection.getBoundingClientRect().height);
+    }, 20);
+
+    calculateBodySize();
+    window.addEventListener('resize', calculateBodySize);
+
+    return () => window.removeEventListener('resize', calculateBodySize);
+  }, []);
+
   const authors = post.assignees.nodes || [];
   return (
-    <PostBox>
-      <Box pad="medium">
-        <Heading level={1} margin="none">
+    <div>
+      <div className="mb-2 md:mb-6 leading-none p-6">
+        <h1 className="text-4xl font-display font-bold leading-none md:leading-tight text-gray-900">
           {context === 'details' ? (
             post.title
           ) : (
@@ -468,57 +519,67 @@ export const Post = ({relay, post, context}: Props) => {
               {post.title}
             </Link>
           )}
-        </Heading>
+        </h1>
+        <div className="text-gray-700 uppercase text-sm mt-2 md:mt-0">
+          {formatDate(postDate, 'MMM do, yyyy')}
+        </div>
+      </div>
 
-        {authors.length > 0 ? (
-          <Box direction="row" gap="medium">
-            {authors.map((node, i) =>
-              node ? (
-                <Box
-                  key={node.id}
-                  align="center"
-                  direction="row"
-                  margin={{vertical: 'medium'}}>
-                  <a href={node.url}>
-                    <Box>
-                      <img
-                        alt={node.name}
-                        src={imageUrl({src: node.avatarUrl})}
-                        style={{
-                          width: 48,
-                          height: 48,
-                          borderRadius: '50%',
-                          marginRight: 8,
-                        }}
-                      />
-                    </Box>
+      {authors.length > 0 ? (
+        <div className="flex px-6">
+          {authors.map((node, i) => {
+            const handle =
+              node && node.websiteUrl
+                ? extractTwitterHandle(node.websiteUrl)
+                : null;
+
+            return node ? (
+              <div className="flex items-center mr-2">
+                <a href={node.url}>
+                  <img
+                    className="h-8 rounded-full shadow-lg w-8"
+                    alt={node.name}
+                    src={imageUrl({src: node.avatarUrl})}
+                  />
+                </a>
+                <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
+                  <a href={node.url} target="_blank">
+                    {node.name || node.login}
                   </a>
-                  <Box>
-                    <a href={node.url}>
-                      <Text size="small">{node.name || node.login}</Text>
+                  {handle ? (
+                    <a
+                      className="text-sm text-gray-600"
+                      target="_blank"
+                      title={`${node.name || node.login} on Twitter`}
+                      href={node.websiteUrl}>
+                      @{handle}
                     </a>
-                    <Text
-                      size="xsmall"
-                      style={{visibility: i === 0 ? 'visible' : 'hidden'}}>
-                      {formatDate(postDate, 'MMM do, yyyy')}
-                    </Text>
-                  </Box>
-                </Box>
-              ) : null,
-            )}
-          </Box>
-        ) : null}
-        <Box direction="row" justify="between"></Box>
-        <Text>
-          <MarkdownRenderer escapeHtml={true} source={post.body} />
-        </Text>
-      </Box>
-      <ReactionBar
-        relay={relay}
-        subjectId={post.id}
-        reactionGroups={post.reactionGroups}
-      />
-    </PostBox>
+                  ) : null}
+                </div>
+              </div>
+            ) : null;
+          })}
+        </div>
+      ) : null}
+      {post.body && context === 'details' ? (
+        <>
+          <div
+            className="fixed flex translate-y-0 align-center z-10"
+            style={{
+              height: '100vh',
+              top: '20%',
+              left: 'calc(50% - 26rem)',
+            }}>
+            <Progress contentHeight={contentHeight} />
+          </div>
+          <div
+            className="font-body leading-normal mt-6 md:mt-8"
+            ref={contentSectionRef}>
+            <MarkdownRenderer escapeHtml={true} source={post.body} />
+          </div>
+        </>
+      ) : null}
+    </div>
   );
 };
 
@@ -538,17 +599,7 @@ export default createFragmentContainer(Post, {
           login
           avatarUrl(size: 96)
           url
-        }
-      }
-      reactionGroups {
-        content
-        viewerHasReacted
-        users(first: 11) {
-          totalCount
-          nodes {
-            login
-            name
-          }
+          websiteUrl
         }
       }
       commentsCount: comments {

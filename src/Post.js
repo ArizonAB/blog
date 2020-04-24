@@ -508,10 +508,19 @@ export const Post = ({relay, post, context}: Props) => {
   }, []);
 
   const authors = post.assignees.nodes || [];
+  const HeadingEl = context === 'list' ? 'h2' : 'h1';
+
   return (
-    <div>
-      <div className="mb-2 md:mb-6 leading-none p-6">
-        <h1 className="text-4xl font-display font-bold leading-none md:leading-tight text-gray-900">
+    <div
+      className={
+        context === 'list' ? 'shadow-lg rounded-lg bg-white my-2' : ''
+      }>
+      <div className={'leading-none p-6 ' + (context === 'list' ? '' : 'mb-2')}>
+        <HeadingEl
+          className={
+            'font-display font-bold leading-none md:leading-tight text-gray-900 ' +
+            (context === 'list' ? 'text-2xl' : 'text-4xl')
+          }>
           {context === 'details' ? (
             post.title
           ) : (
@@ -519,14 +528,14 @@ export const Post = ({relay, post, context}: Props) => {
               {post.title}
             </Link>
           )}
-        </h1>
+        </HeadingEl>
         <div className="text-gray-700 uppercase text-sm mt-2 md:mt-0">
           {formatDate(postDate, 'MMM do, yyyy')}
         </div>
       </div>
 
       {authors.length > 0 ? (
-        <div className="flex px-6">
+        <div className={'flex ' + (context === 'list' ? 'px-6 pb-6' : 'px-6')}>
           {authors.map((node, i) => {
             const handle =
               node && node.websiteUrl
@@ -577,6 +586,47 @@ export const Post = ({relay, post, context}: Props) => {
             ref={contentSectionRef}>
             <MarkdownRenderer escapeHtml={true} source={post.body} />
           </div>
+          {authors.length > 0 ? (
+            <>
+              <div className="mt-10 font-body font-sm mb-2 text-gray-700">
+                Written By
+              </div>
+              <div className="flex px-6 shadow-lg p-4 border-t-4 border-collapse">
+                {authors.map((node, i) => {
+                  const handle =
+                    node && node.websiteUrl
+                      ? extractTwitterHandle(node.websiteUrl)
+                      : null;
+
+                  return node ? (
+                    <div className="flex items-center mr-2">
+                      <a href={node.url}>
+                        <img
+                          className="h-16 rounded-full shadow-lg w-16"
+                          alt={node.name}
+                          src={imageUrl({src: node.avatarUrl})}
+                        />
+                      </a>
+                      <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
+                        <a href={node.url} target="_blank">
+                          {node.name || node.login}
+                        </a>
+                        {handle ? (
+                          <a
+                            className="text-sm text-gray-600"
+                            target="_blank"
+                            title={`${node.name || node.login} on Twitter`}
+                            href={node.websiteUrl}>
+                            @{handle}
+                          </a>
+                        ) : null}
+                      </div>
+                    </div>
+                  ) : null;
+                })}
+              </div>
+            </>
+          ) : null}
         </>
       ) : null}
     </div>

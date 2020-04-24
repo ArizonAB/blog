@@ -84,9 +84,13 @@ export const theme = deepMerge(generate(24, 10), {
   },
 });
 
-function Header({gitHub, adminLinks}) {
+function Header({large}: {large?: boolean}) {
   return (
-    <div className="mt-8 md:mt-10 mb-4 md:mb-16 text-center flex justify-between px-6">
+    <div
+      className={
+        'mt-8 md:mt-10 mb-4 md:mb-8 text-center flex px-6 ' +
+        (large ? 'justify-center my-64 py-64' : '')
+      }>
       <Link
         getProps={({isCurrent}) => ({
           style: isCurrent
@@ -104,8 +108,9 @@ function Header({gitHub, adminLinks}) {
         <img
           src={require('./assets/logo.svg')}
           alt="Arizon AB"
-          className="h-10"
+          className={large ? 'h-20 mx-auto' : 'h-10'}
         />
+        {large ? <div className="font-body">Tech Blog</div> : null}
       </Link>
     </div>
   );
@@ -120,7 +125,6 @@ const postsRootQuery = graphql`
       cacheSeconds: 300
     ) {
     gitHub {
-      ...Avatar_gitHub @arguments(repoName: $repoName, repoOwner: $repoOwner)
       repository(name: $repoName, owner: $repoOwner) {
         ...Posts_repository
       }
@@ -189,9 +193,17 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
   } else {
     return (
       <>
-        <Header gitHub={data.gitHub} adminLinks={[]} />
-        <Posts repository={respository} />
-        <Footer />
+        <Header large={true} />
+        <div className="bg-gray-100 py-8 pb-48">
+          <Wrap>
+            <div className="">
+              <h1 className="font-body text-md text-gray-900 uppercase">
+                Latest Articles
+              </h1>
+            </div>
+            <Posts repository={respository} />
+          </Wrap>
+        </div>
       </>
     );
   }
@@ -199,7 +211,7 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
 
 function Footer() {
   return (
-    <div className="mt-10 mb-10 md:mt-48 md:mb-56 flex justify-center p-4">
+    <div className="mt-10 py-10 md:mt-20 md:pb-56 md:pt-56 flex justify-center p-4 bg-gray-100">
       <div className="text-center">
         <img className="w-16" src={require('./assets/logo-symbol-black.svg')} />
       </div>
@@ -267,21 +279,22 @@ function PostRoot({preloadedQuery}: {preloadedQuery: any}) {
         <Helmet>
           <title>{post.title}</title>
         </Helmet>
-        <Header
-          gitHub={data.gitHub}
-          adminLinks={[
-            {
-              label: 'Edit post',
-              href: editIssueUrl({issueNumber: post.number}),
-              icon: <Github size="16px" />,
-            },
-          ]}
-        />
-        <Post context="details" post={post} />
+        <Wrap>
+          <Header />
+          <Post context="details" post={post} />
+        </Wrap>
         <Footer />
       </>
     );
   }
+}
+
+function Wrap({children}: {children: any}) {
+  return (
+    <div className="relative w-full max-w-2xl m-auto break-words">
+      {children}
+    </div>
+  );
 }
 
 const Route = React.memo(function Route({
@@ -293,7 +306,7 @@ const Route = React.memo(function Route({
   const notificationContext = React.useContext(NotificationContext);
   const {loginStatus} = React.useContext(UserContext);
   return (
-    <div className="relative w-full max-w-2xl m-auto break-words">
+    <>
       <ErrorBoundary>
         <React.Suspense fallback={null}>
           <routeConfig.component
@@ -305,7 +318,7 @@ const Route = React.memo(function Route({
           />
         </React.Suspense>
       </ErrorBoundary>
-    </div>
+    </>
   );
 });
 

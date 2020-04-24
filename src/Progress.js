@@ -5,6 +5,10 @@ import throttle from 'lodash.throttle';
 const clamp = (value: number, min: number, max: number) =>
   value < min ? min : value > max ? max : value;
 
+function easeInExpo(x: number): number {
+  return x === 0 ? 0 : Math.pow(2, 10 * x - 10);
+}
+
 type IProgress = {
   contentHeight: number,
 };
@@ -29,6 +33,8 @@ export const Progress = ({contentHeight}: IProgress) => {
     }
   }, [contentHeight]);
 
+  const opacity = 1 - easeInExpo(progress / 100);
+
   return (
     <div tabIndex={-1} className="relative outline-none select-none">
       <div
@@ -38,7 +44,7 @@ export const Progress = ({contentHeight}: IProgress) => {
           height: 'calc(88vh - 40px)',
           maxHeight: '425px',
           width: '1px',
-          opacity: 0.6,
+          opacity,
         }}>
         <div
           className="absolute h-full bg-gray-800 left-0"
@@ -46,6 +52,7 @@ export const Progress = ({contentHeight}: IProgress) => {
             transform: `translateY(${progress}%)`,
             top: '-100%',
             width: '1px',
+            opacity,
           }}
         />
       </div>

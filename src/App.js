@@ -194,7 +194,7 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
     return (
       <>
         <Header large={true} />
-        <div className="bg-gray-100 py-8 pb-48">
+        <div className="bg-gray-100 py-8 pb-48 px-6">
           <Wrap>
             <div className="">
               <h1 className="font-body text-md text-gray-900 uppercase">
@@ -211,7 +211,7 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
 
 function Footer() {
   return (
-    <div className="mt-10 py-10 md:mt-20 md:pb-56 md:pt-56 flex justify-center p-4 bg-gray-100">
+    <div className="mt-16 py-10 md:mt-20 md:pb-56 md:pt-56 flex justify-center p-4 bg-gray-100">
       <div className="text-center">
         <img className="w-16" src={require('./assets/logo-symbol-black.svg')} />
       </div>

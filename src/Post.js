@@ -587,7 +587,7 @@ export const Post = ({relay, post, context}: Props) => {
             <MarkdownRenderer escapeHtml={true} source={post.body} />
           </div>
           {authors.length > 0 ? (
-            <>
+            <div className="px-6">
               <div className="mt-10 font-body font-sm mb-2 text-gray-700">
                 Written By
               </div>
@@ -625,7 +625,7 @@ export const Post = ({relay, post, context}: Props) => {
                   ) : null;
                 })}
               </div>
-            </>
+            </div>
           ) : null}
         </>
       ) : null}

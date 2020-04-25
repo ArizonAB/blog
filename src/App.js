@@ -90,10 +90,10 @@ function Header({large}: {large?: boolean}) {
   return (
     <div
       className={
-        'mb-4 md:mb-8 text-center flex px-6 ' +
+        'mb-4 text-center flex px-6 ' +
         (large
-          ? 'justify-center items-center flex-col bg-gray-900'
-          : 'mt-8 md:mt-10')
+          ? 'justify-center items-center flex-col bg-gray-900 md:mb-8'
+          : 'mt-8 md:mt-10 md:mb-4')
       }
       style={large ? {height: '45vh'} : {}}>
       <Link
@@ -117,7 +117,7 @@ function Header({large}: {large?: boolean}) {
               : require('./assets/logo.svg')
           }
           alt="Arizon AB"
-          className={large ? 'h-20 mx-auto' : 'h-10'}
+          className={large ? 'h-20 mx-auto' : 'h-12'}
         />
       </Link>
 

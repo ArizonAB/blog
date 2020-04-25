@@ -181,7 +181,7 @@ const defaultRenderers = ({SyntaxHighlighter}) => ({
   },
   text(props) {
     const text = props.children;
-    return <div className="leading-loose px-6">{emojify(text)}</div>;
+    return <p className="leading-loose px-6">{emojify(text)}</p>;
   },
   code(props) {
     return <CodeBlock SyntaxHighlighter={SyntaxHighlighter} {...props} />;

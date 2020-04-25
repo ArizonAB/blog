@@ -33,6 +33,7 @@ import PreloadCacheContext from './PreloadCacheContext';
 import * as throttle from 'lodash.throttle';
 import * as debounce from 'lodash.debounce';
 import {Progress} from './Progress';
+import {extractFirstImage} from './markdownUtils';
 
 import type {Post_post} from './__generated__/Post_post.graphql';
 
@@ -225,6 +226,7 @@ type Props = {
   relay: RelayProp,
   post: Post_post,
   context: 'list' | 'details',
+  isFirstPost?: boolean,
 };
 
 export function PostBox({children}: {children: React.Node}) {
@@ -451,7 +453,12 @@ function extractTwitterHandle(url: string): ?string {
   }
 }
 
-export const Post = ({relay, post, context}: Props) => {
+export const Post = ({relay, post, context, isFirstPost}: Props) => {
+  const firstImg = React.useMemo(
+    () => (context === 'list' ? extractFirstImage(post.body) : null),
+    [post.body],
+  );
+
   const environment = useRelayEnvironment();
   const cache = React.useContext(PreloadCacheContext);
   React.useEffect(() => {
@@ -511,64 +518,77 @@ export const Post = ({relay, post, context}: Props) => {
   const HeadingEl = context === 'list' ? 'h2' : 'h1';
 
   return (
-    <article
-      className={
-        context === 'list' ? 'shadow-lg rounded-lg bg-white my-2' : ''
-      }>
+    <article className={context === 'list' ? 'bg-white my-2' : ''}>
       <header
-        className={'leading-none p-6 ' + (context === 'list' ? '' : 'mb-2')}>
-        <HeadingEl
-          className={
-            'font-display font-bold leading-none md:leading-tight text-gray-900 ' +
-            (context === 'list' ? 'text-2xl' : 'text-4xl')
-          }>
-          {context === 'details' ? (
-            post.title
-          ) : (
-            <Link style={{color: 'inherit'}} to={postPath({post})}>
-              {post.title}
-            </Link>
-          )}
-        </HeadingEl>
-        <div className="text-gray-700 uppercase text-sm mt-2 md:mt-0">
-          {formatDate(postDate, 'MMM do, yyyy')}
+        className={
+          'leading-none ' +
+          (context === 'list' ? 'p-4 pt-2' : 'p-6 pb-0') +
+          (context === 'list' && isFirstPost ? '' : ' flex items-center')
+        }>
+        {firstImg && context === 'list' ? (
+          <div
+            style={{'background-image': 'url(' + firstImg.url + ')'}}
+            className={
+              'bg-cover bg-center bg-no-repeat rounded-lg shadow-lg mb-4 ' +
+              (isFirstPost ? 'w-full h-64' : 'w-32 h-32 mr-4')
+            }
+          />
+        ) : null}
+        <div>
+          <HeadingEl
+            className={
+              'font-display font-bold leading-none md:leading-tight text-gray-900 ' +
+              (context === 'list' ? 'text-2xl' : 'text-4xl')
+            }>
+            {context === 'details' ? (
+              post.title
+            ) : (
+              <Link style={{color: 'inherit'}} to={postPath({post})}>
+                {post.title}
+              </Link>
+            )}
+          </HeadingEl>
+          <div className="text-gray-700 uppercase text-sm mt-2 md:mt-0">
+            {formatDate(postDate, 'MMM do, yyyy')}
+          </div>
+
+          {authors.length > 0 ? (
+            <div className={'flex mt-4 ' + (context === 'list' ? 'pb-2' : '')}>
+              {authors.map((node, i) => {
+                const handle =
+                  node && node.websiteUrl
+                    ? extractTwitterHandle(node.websiteUrl)
+                    : null;
+
+                return node ? (
+                  <div className="flex items-center mr-2">
+                    <img
+                      className="h-8 rounded-full shadow-lg w-8"
+                      alt={node.name}
+                      src={imageUrl({src: node.avatarUrl})}
+                    />
+                    <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
+                      <a href={node.url} target="_blank">
+                        {node.name || node.login}
+                      </a>
+                      {handle ? (
+                        <a
+                          className="text-sm text-gray-600"
+                          target="_blank"
+                          title={`${node.name || node.login} on Twitter`}
+                          href={node.websiteUrl}>
+                          @{handle}
+                        </a>
+                      ) : null}
+                    </div>
+                  </div>
+                ) : null;
+              })}
+            </div>
+          ) : null}
         </div>
       </header>
 
-      {authors.length > 0 ? (
-        <div className={'flex ' + (context === 'list' ? 'px-6 pb-6' : 'px-6')}>
-          {authors.map((node, i) => {
-            const handle =
-              node && node.websiteUrl
-                ? extractTwitterHandle(node.websiteUrl)
-                : null;
-
-            return node ? (
-              <div className="flex items-center mr-2">
-                <img
-                  className="h-8 rounded-full shadow-lg w-8"
-                  alt={node.name}
-                  src={imageUrl({src: node.avatarUrl})}
-                />
-                <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
-                  <a href={node.url} target="_blank">
-                    {node.name || node.login}
-                  </a>
-                  {handle ? (
-                    <a
-                      className="text-sm text-gray-600"
-                      target="_blank"
-                      title={`${node.name || node.login} on Twitter`}
-                      href={node.websiteUrl}>
-                      @{handle}
-                    </a>
-                  ) : null}
-                </div>
-              </div>
-            ) : null;
-          })}
-        </div>
-      ) : null}
       {post.body && context === 'details' ? (
         <>
           <div

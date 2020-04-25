@@ -34,7 +34,9 @@
     "react-markdown": "^4.3.1",
     "react-relay": "0.0.0-experimental-5f1cb628",
     "react-syntax-highlighter": "^11.0.2",
+    "remark-parse": "^5.0.0",
     "sentence-case": "^3.0.3",
+    "unified": "^6.1.5",
     "serialize-javascript": "^2.1.2",
     "styled-components": "^5.0.0",
     "universal-cookie": "^4.0.3"

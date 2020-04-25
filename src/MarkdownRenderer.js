@@ -40,9 +40,7 @@ class CodeBlock extends React.PureComponent<
       ? null
       : Promise.all([
           import('react-syntax-highlighter/dist/esm/light'),
-          import(
-            'react-syntax-highlighter/dist/esm/styles/hljs/shades-of-purple'
-          ),
+          import('react-syntax-highlighter/dist/esm/styles/hljs/monokai'),
           importLanguage(this.props.language),
         ])
           .then(
@@ -92,7 +90,12 @@ function PlainImage(imageProps) {
   const {isRss, src, ...props} = imageProps;
   return (
     <Box as="span" style={{display: 'block'}}>
-      <img style={{maxWidth: '100%'}} src={imageUrl({src})} {...props} />
+      <img
+        style={{maxWidth: '100%'}}
+        src={imageUrl({src})}
+        {...props}
+        className="shadow-lg rounded-md"
+      />
       {props.isRss ? <br /> : null}
       {props.title ? (
         <Text

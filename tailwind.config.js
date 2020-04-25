@@ -5,6 +5,8 @@ module.exports = {
       body: ['Open Sans', 'sans-serif'],
     },
   },
-  variants: {},
+  variants: {
+    fill: ['hover'],
+  },
   plugins: [],
 };

@@ -1,6 +1,6 @@
 {
-  "short_name": "OneGraph Updates",
-  "name": "OneGraph Product Updates",
+  "short_name": "Arizon Blog",
+  "name": "Arizon Blog",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#1a202c",
   "background_color": "#ffffff"
 }

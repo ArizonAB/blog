@@ -587,45 +587,51 @@ export const Post = ({relay, post, context}: Props) => {
             <MarkdownRenderer escapeHtml={true} source={post.body} />
           </div>
           {authors.length > 0 ? (
-            <div className="px-6">
-              <div className="mt-10 font-body font-sm mb-2 text-gray-700">
-                Written By
-              </div>
-              <div className="flex px-6 shadow-lg p-4 border-t-4 border-collapse">
-                {authors.map((node, i) => {
-                  const handle =
-                    node && node.websiteUrl
-                      ? extractTwitterHandle(node.websiteUrl)
-                      : null;
+            <>
+              <div className="px-6">
+                <hr
+                  className="mt-10 mb-6 border-gray-300"
+                  style={{height: '1px'}}
+                />
+                <div className="mt-10 font-body font-sm mb-4 text-gray-700">
+                  Written By
+                </div>
+                <div className="flex">
+                  {authors.map((node, i) => {
+                    const handle =
+                      node && node.websiteUrl
+                        ? extractTwitterHandle(node.websiteUrl)
+                        : null;
 
-                  return node ? (
-                    <div className="flex items-center mr-2">
-                      <a href={node.url}>
-                        <img
-                          className="h-16 rounded-full shadow-lg w-16"
-                          alt={node.name}
-                          src={imageUrl({src: node.avatarUrl})}
-                        />
-                      </a>
-                      <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
-                        <a href={node.url} target="_blank">
-                          {node.name || node.login}
+                    return node ? (
+                      <div className="flex items-center mr-2">
+                        <a href={node.url}>
+                          <img
+                            className="h-16 rounded-full shadow-lg w-16"
+                            alt={node.name}
+                            src={imageUrl({src: node.avatarUrl})}
+                          />
                         </a>
-                        {handle ? (
-                          <a
-                            className="text-sm text-gray-600"
-                            target="_blank"
-                            title={`${node.name || node.login} on Twitter`}
-                            href={node.websiteUrl}>
-                            @{handle}
+                        <div className="flex flex-col ml-3 text-gray-800 font-semibold leading-tight">
+                          <a href={node.url} target="_blank">
+                            {node.name || node.login}
                           </a>
-                        ) : null}
+                          {handle ? (
+                            <a
+                              className="text-sm text-gray-600"
+                              target="_blank"
+                              title={`${node.name || node.login} on Twitter`}
+                              href={node.websiteUrl}>
+                              @{handle}
+                            </a>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  ) : null;
-                })}
+                    ) : null;
+                  })}
+                </div>
               </div>
-            </div>
+            </>
           ) : null}
         </>
       ) : null}

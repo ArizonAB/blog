@@ -61,7 +61,7 @@ class CodeBlock extends React.PureComponent<
                 SyntaxHighlighter: props => (
                   <SyntaxHighlighter
                     style={style}
-                    className="md:rounded-lg shadow-lg"
+                    className="md:rounded-lg shadow-lg my-6"
                     {...props}
                   />
                 ),

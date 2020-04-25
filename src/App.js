@@ -221,6 +221,7 @@ function LinkSection({iconSize = '2rem'}: {iconSize?: string}) {
           xmlns="http://www.w3.org/2000/svg"
           width={iconSize}
           height={iconSize}
+          className="fill-current text-gray-400 hover:text-gray-800 transition duration-300 ease-in-out"
           viewBox="0 0 24 24">
           <path d="M0 0v24h24v-24h-24zm8 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.397-2.586 7-2.777 7 2.476v6.759z" />
         </svg>
@@ -234,6 +235,7 @@ function LinkSection({iconSize = '2rem'}: {iconSize?: string}) {
           xmlns="http://www.w3.org/2000/svg"
           width={iconSize}
           height={iconSize}
+          className="fill-current text-gray-400 hover:text-gray-800 transition duration-300 ease-in-out"
           viewBox="0 0 24 24">
           <path d="M0 0v24h24v-24h-24zm18.862 9.237c.208 4.617-3.235 9.765-9.33 9.765-1.854 0-3.579-.543-5.032-1.475 1.742.205 3.48-.278 4.86-1.359-1.437-.027-2.649-.976-3.066-2.28.515.098 1.021.069 1.482-.056-1.579-.317-2.668-1.739-2.633-3.26.442.246.949.394 1.486.411-1.461-.977-1.875-2.907-1.016-4.383 1.619 1.986 4.038 3.293 6.766 3.43-.479-2.053 1.079-4.03 3.198-4.03.944 0 1.797.398 2.396 1.037.748-.147 1.451-.42 2.085-.796-.245.767-.766 1.41-1.443 1.816.664-.08 1.297-.256 1.885-.517-.44.656-.997 1.234-1.638 1.697z" />
         </svg>
@@ -247,6 +249,7 @@ function LinkSection({iconSize = '2rem'}: {iconSize?: string}) {
           xmlns="http://www.w3.org/2000/svg"
           width={iconSize}
           height={iconSize}
+          className="fill-current text-gray-400 hover:text-gray-800 transition duration-300 ease-in-out"
           viewBox="0 0 24 24">
           <path d="M21 13v10h-6v-6h-6v6h-6v-10h-3l12-12 12 12h-3zm-1-5.907v-5.093h-3v2.093l3 3z" />
         </svg>
@@ -257,14 +260,9 @@ function LinkSection({iconSize = '2rem'}: {iconSize?: string}) {
   ];
 
   return (
-    <div className="flex fill-current text-gray-400">
+    <div className="flex">
       {icons.map((icon, i) => (
-        <div
-          key={i}
-          className={
-            'hover:text-gray-800 transition duration-300 ease-in-out' +
-            (i === 0 ? '' : ' ml-4')
-          }>
+        <div key={i} className={i === 0 ? '' : ' ml-4'}>
           <a
             href={icon.link}
             title={icon.title}

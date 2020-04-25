@@ -217,9 +217,9 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
       <>
         <SkipNavLink />
         <Header large={true} />
-        <div className="pb-8 pb-48 px-6">
+        <div className="pb-8 pb-48 px-3 md:px-6">
           <Wrap>
-            <div className="-mt-32">
+            <div className="md:-mt-32 -mt-24">
               <SkipNavContent />
               <h1 className="font-body text-md text-white mb-2">
                 Latest Articles
@@ -243,7 +243,7 @@ function LinkSection({
   white?: boolean,
 }) {
   const colorClasses = white
-    ? 'text-white hover:text-gray-400'
+    ? 'text-gray-800 hover:text-gray-200'
     : 'text-gray-400 hover:text-gray-800';
 
   const icons: Array<{icon: any, link: string, title: string}> = [

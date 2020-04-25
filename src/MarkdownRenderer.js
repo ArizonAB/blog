@@ -94,7 +94,7 @@ function PlainImage(imageProps) {
         style={{maxWidth: '100%'}}
         src={imageUrl({src})}
         {...props}
-        className="shadow-lg rounded-md"
+        className="shadow-lg md:rounded-md"
       />
       {props.isRss ? <br /> : null}
       {props.title ? (

@@ -89,8 +89,9 @@ function Header({large}: {large?: boolean}) {
     <div
       className={
         'mt-8 md:mt-10 mb-4 md:mb-8 text-center flex px-6 ' +
-        (large ? 'justify-center my-64 py-64' : '')
-      }>
+        (large ? 'justify-center items-center' : '')
+      }
+      style={large ? {height: '70vh'} : {}}>
       <Link
         getProps={({isCurrent}) => ({
           style: isCurrent

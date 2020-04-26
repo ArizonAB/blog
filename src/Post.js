@@ -527,10 +527,13 @@ export const Post = ({relay, post, context, isFirstPost}: Props) => {
         }>
         {firstImg && context === 'list' ? (
           <div
-            style={{'background-image': 'url(' + firstImg.url + ')'}}
+            style={{
+              backgroundImage: 'url(' + firstImg.url + ')',
+              height: isFirstPost ? '30vh' : undefined,
+            }}
             className={
               'bg-cover bg-center bg-no-repeat rounded-lg shadow-lg mb-4 ' +
-              (isFirstPost ? 'w-full h-64' : 'w-32 h-32 mr-4')
+              (isFirstPost ? 'w-full' : 'w-32 h-32 mr-4')
             }
           />
         ) : null}

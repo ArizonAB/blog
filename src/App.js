@@ -219,7 +219,7 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
         <Header large={true} />
         <div className="pb-8 pb-48 px-3 md:px-6">
           <Wrap>
-            <div className="md:-mt-32 -mt-24">
+            <div className="" style={{marginTop: '-12.5vh'}}>
               <SkipNavContent />
               <h1 className="font-body text-md text-white mb-2">
                 Latest Articles

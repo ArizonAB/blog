@@ -50,17 +50,15 @@ const Posts = ({relay, repository}: Props) => {
       <ul>
         {issues.map((e, i) =>
           e && e.node ? (
-            <>
-              <li key={e.node.id}>
-                {i > 0 ? (
-                  <hr
-                    className="mb-6 border-gray-300 mx-4"
-                    style={{height: '1px'}}
-                  />
-                ) : null}
-                <Post context="list" post={e.node} isFirstPost={i === 0} />
-              </li>
-            </>
+            <li key={e.node.id}>
+              {i > 0 ? (
+                <hr
+                  className="mb-6 border-gray-300 mx-4"
+                  style={{height: '1px'}}
+                />
+              ) : null}
+              <Post context="list" post={e.node} isFirstPost={i === 0} />
+            </li>
           ) : null,
         )}
       </ul>

@@ -120,8 +120,6 @@ function Header({large}: {large?: boolean}) {
           className={large ? 'h-20 mx-auto' : 'h-12'}
         />
       </Link>
-
-      {large ? <LinkSection iconSize="1.5rem" white={true} /> : null}
     </div>
   );
 }
@@ -221,12 +219,12 @@ function PostsRoot({preloadedQuery}: {preloadedQuery: any}) {
           <Wrap>
             <div className="" style={{marginTop: '-12.5vh'}}>
               <SkipNavContent />
-              <h1 className="font-body text-md text-white mb-2">
-                Latest Articles
-              </h1>
-              <div className="rounded-t-lg bg-white shadow-lg">
+              <div className="bg-white shadow-lg">
                 <Posts repository={respository} />
               </div>
+            </div>
+            <div className="flex justify-center items-center mt-32">
+              <LinkSection />
             </div>
           </Wrap>
         </div>
@@ -242,6 +240,14 @@ function LinkSection({
   iconSize?: string,
   white?: boolean,
 }) {
+  return (
+    <a
+      target="_blank"
+      href="https://arizon.se"
+      className="text-sm text-gray-600 font-body">
+      More about Arizon here
+    </a>
+  );
   const colorClasses = white
     ? 'text-gray-800 hover:text-gray-200'
     : 'text-gray-400 hover:text-gray-800';
@@ -320,17 +326,14 @@ function LinkSection({
 
 function Footer() {
   return (
-    <div className="mt-16 py-10 md:mt-20 md:pb-32 md:pt-32 flex justify-center p-4 bg-gray-100">
+    <div className="mt-16 py-10 md:mt-20 md:pb-32 md:pt-32 flex justify-center p-4 bg-gray-900">
       <div className="text-center flex flex-col">
-        <a
-          href="https://arizon.se"
-          target="_blank"
-          title="Click for more on Arizon">
+        <Link to="/">
           <img
             className="w-16 mx-auto"
-            src={require('./assets/logo-symbol-black.svg')}
+            src={require('./assets/logo-symbol.svg')}
           />
-        </a>
+        </Link>
       </div>
     </div>
   );

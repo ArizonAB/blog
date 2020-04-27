@@ -59,7 +59,7 @@ class CodeBlock extends React.PureComponent<
                 SyntaxHighlighter: props => (
                   <SyntaxHighlighter
                     style={style}
-                    className="md:rounded-lg shadow-lg my-6"
+                    className="shadow-lg my-6"
                     {...props}
                   />
                 ),
@@ -79,7 +79,7 @@ class CodeBlock extends React.PureComponent<
       return <SyntaxHighlighter language={language}>{value}</SyntaxHighlighter>;
     }
     return (
-      <pre className="block overflow-x-auto p-0 rounded-sm">
+      <pre className="block overflow-x-auto p-0">
         <code className={`language-${language}`}>{value}</code>
       </pre>
     );
@@ -94,7 +94,7 @@ function PlainImage(imageProps) {
         style={{maxWidth: '100%'}}
         src={imageUrl({src})}
         {...props}
-        className="shadow-lg md:rounded-md"
+        className="shadow-lg"
       />
       {props.isRss ? <br /> : null}
       {props.title ? (

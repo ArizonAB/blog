@@ -532,7 +532,7 @@ export const Post = ({relay, post, context, isFirstPost}: Props) => {
               height: isFirstPost ? '30vh' : undefined,
             }}
             className={
-              'bg-cover bg-center bg-no-repeat rounded-lg shadow-lg mb-4 ' +
+              'bg-cover bg-center bg-no-repeat shadow-lg mb-4 ' +
               (isFirstPost ? 'w-full' : 'w-32 h-32 mr-4')
             }
           />

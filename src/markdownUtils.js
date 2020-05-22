@@ -23,7 +23,28 @@ function findImage(node: Node): ?ImageNode {
   }
 }
 
+function findFirstParagraphText(node: Node): ?string {
+  if (node.type === 'text') {
+    // $FlowFixMe
+    return node.value;
+  } else if (node.children) {
+    for (let i = 0; i <= node.children.length - 1; i += 1) {
+      const n = node.children[i];
+      const text = findFirstParagraphText(n);
+
+      if (text) {
+        return text;
+      }
+    }
+  }
+}
+
 export function extractFirstImage(source: string) {
   const parsed = parser.parse(source);
   return findImage(parsed);
+}
+
+export function extractFirstText(source: string) {
+  const parsed = parser.parse(source);
+  return findFirstParagraphText(parsed);
 }

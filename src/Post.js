@@ -33,7 +33,7 @@ import PreloadCacheContext from './PreloadCacheContext';
 import * as throttle from 'lodash.throttle';
 import * as debounce from 'lodash.debounce';
 import {Progress} from './Progress';
-import {extractFirstImage} from './markdownUtils';
+import {extractFirstImage, extractFirstText} from './markdownUtils';
 
 import type {Post_post} from './__generated__/Post_post.graphql';
 
@@ -454,10 +454,12 @@ function extractTwitterHandle(url: string): ?string {
 }
 
 export const Post = ({relay, post, context, isFirstPost}: Props) => {
-  const firstImg = React.useMemo(
-    () => (context === 'list' ? extractFirstImage(post.body) : null),
-    [post.body],
-  );
+  const firstImg = React.useMemo(() => extractFirstImage(post.body), [
+    post.body,
+  ]);
+  const firstText = React.useMemo(() => extractFirstText(post.body), [
+    post.body,
+  ]);
 
   const environment = useRelayEnvironment();
   const cache = React.useContext(PreloadCacheContext);
@@ -519,6 +521,10 @@ export const Post = ({relay, post, context, isFirstPost}: Props) => {
 
   return (
     <article className={context === 'list' ? 'bg-white my-2' : ''}>
+      <Helmet>
+        {firstImg ? <meta property="og:image" content={firstImg.url} /> : null}
+        {firstText ? <meta name="description" content={firstText} /> : null}
+      </Helmet>
       <header
         className={
           'leading-none ' +

@@ -23,6 +23,7 @@ import config from './config';
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 
 const siteHostname = process.env.RAZZLE_SITE_HOSTNAME || process.env.URL;
+const ALLOWED_LABELS = process.env.ALLOWED_LABELS || '';
 
 function buildHtml({
   markup,
@@ -89,7 +90,8 @@ function buildHtml({
   </head>
   <body>
     <div id="root">${markup ? markup : ''}</div>
-    <script>window.__basename__ = "${basePath || '/'}";</script>
+    <script>window.__basename__ = "${basePath ||
+      '/'}"; window.ALLOWED_LABELS = "${ALLOWED_LABELS}";</script>
     ${bootstrapScript ? bootstrapScript : ''}
   </body>
 </html>`;

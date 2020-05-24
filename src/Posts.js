@@ -46,8 +46,8 @@ const Posts = ({relay, repository}: Props) => {
   const issues = repository.issues.edges || [];
 
   return (
-    <Box>
-      <ul>
+    <div className="pt-1">
+      <ul className="list-none p-0">
         {issues.map((e, i) =>
           e && e.node ? (
             <li key={e.node.id}>
@@ -73,7 +73,7 @@ const Posts = ({relay, repository}: Props) => {
           <LoadingSpinner width="48px" height="48px" />
         </Box>
       ) : null}
-    </Box>
+    </div>
   );
 };
 
@@ -89,12 +89,13 @@ export default createPaginationContainer(
             type: "GitHubIssueOrder"
             defaultValue: {direction: DESC, field: CREATED_AT}
           }
+          labels: {type: "[String!]!", defaultValue: ["publish", "Publish"]}
         ) {
         issues(
           first: $count
           after: $cursor
           orderBy: $orderBy
-          labels: ["publish", "Publish"]
+          labels: $labels
         ) @connection(key: "Posts_posts_issues") {
           edges {
             node {

@@ -14,6 +14,7 @@ import {Image as GrommetImage} from 'grommet/components/Image';
 import {Box} from 'grommet/components/Box';
 import {Text} from 'grommet/components/Text';
 import {ResponsiveContext} from 'grommet/contexts/ResponsiveContext';
+import {unwrapBlocks} from './markdownUtils';
 import emoji from './emoji';
 
 type Props = {
@@ -94,10 +95,11 @@ function PlainImage(imageProps) {
         style={{maxWidth: '100%'}}
         src={imageUrl({src})}
         {...props}
-        className="shadow-lg"
+        title={props.title === 'inline' ? undefined : props.title}
+        className={props.title === 'inline' ? 'my-6 px-6' : 'shadow-lg my-6'}
       />
       {props.isRss ? <br /> : null}
-      {props.title ? (
+      {props.title && props.title !== 'inline' ? (
         <Text
           style={{display: 'block'}}
           size="xsmall"
@@ -125,7 +127,7 @@ function Image(props) {
 }
 
 function P(props) {
-  return <p className="mb-4" {...props} />;
+  return <p className="mb-4 px-6" {...props} />;
 }
 
 const parseHtml = htmlParser({
@@ -177,14 +179,17 @@ function Link(props) {
 const defaultRenderers = ({SyntaxHighlighter}) => ({
   blockquote(props) {
     return (
-      <Text color="dark-3">
-        <blockquote {...props} />
-      </Text>
+      <p className="px-6">
+        <Text color="dark-3">
+          <blockquote {...props} />
+        </Text>
+      </p>
     );
   },
   text(props) {
     const text = props.children;
-    return <p className="leading-loose px-6">{emojify(text)}</p>;
+
+    return emojify(text);
   },
   code(props) {
     return <CodeBlock SyntaxHighlighter={SyntaxHighlighter} {...props} />;
@@ -231,7 +236,7 @@ const defaultRenderers = ({SyntaxHighlighter}) => ({
     return <P {...props} />;
   },
   heading(props) {
-    const common = 'font-display';
+    const common = 'font-display px-6 mt-10';
     switch (props.level + 1) {
       case 1:
         return <h1 className={`${common} text-6xl`} {...props}></h1>;
@@ -259,7 +264,9 @@ export default class MarkdownRenderer extends React.PureComponent<Props> {
         escapeHtml={this.props.escapeHtml}
         source={this.props.source}
         renderers={defaultRenderers({SyntaxHighlighter})}
-        astPlugins={this.props.escapeHtml ? [parseHtml] : []}
+        astPlugins={
+          this.props.escapeHtml ? [parseHtml, unwrapBlocks] : [unwrapBlocks]
+        }
       />
     );
   }
@@ -282,7 +289,9 @@ export class RssMarkdownRenderer extends React.PureComponent<Props> {
             return <Heading level={level + 2} {...restProps} />;
           },
         }}
-        astPlugins={this.props.escapeHtml ? [parseHtml] : []}
+        astPlugins={
+          this.props.escapeHtml ? [parseHtml, unwrapBlocks] : [unwrapBlocks]
+        }
       />
     );
   }

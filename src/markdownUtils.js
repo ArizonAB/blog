@@ -48,3 +48,12 @@ export function extractFirstText(source: string) {
   const parsed = parser.parse(source);
   return findFirstParagraphText(parsed);
 }
+
+export function unwrapBlocks(node) {
+  return {
+    ...node,
+    children: node.children.map(n =>
+      n.children && n.children[0].type === 'image' ? n.children[0] : n,
+    ),
+  };
+}

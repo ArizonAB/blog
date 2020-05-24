@@ -4,3 +4,24 @@
 /* purgecss end ignore */
 
 @tailwind utilities;
+
+/* purgecss start ignore */
+body,
+p {
+  @apply leading-loose;
+}
+
+ol {
+  @apply list-decimal;
+}
+
+ul {
+  @apply list-disc;
+}
+
+ol,
+ul {
+  padding-left: 40px;
+  @apply mb-4 leading-loose;
+}
+/* purgecss end ignore */

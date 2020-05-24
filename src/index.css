@@ -15,6 +15,7 @@
 body {
   font-family: 'Open Sans', sans-serif;
   color: #1a202c;
+  @apply leading-loose;
 }
 
 h1,

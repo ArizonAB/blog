@@ -24,4 +24,13 @@ ul {
   padding-left: 40px;
   @apply mb-4 leading-loose;
 }
+
+blockquote {
+  font-style: italic;
+  box-shadow: inset 1px 0 0 0 #4a5568;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  @apply text-gray-700;
+  @apply pl-2;
+}
 /* purgecss end ignore */
